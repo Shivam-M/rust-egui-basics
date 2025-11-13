@@ -1,5 +1,3 @@
-use std::rc::Rc;
-use std::cell::RefCell;
 use eframe::egui;
 
 static WINDOW_WIDTH: f32 = 1280.0;
@@ -57,6 +55,11 @@ impl eframe::App for CollisionApp {
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.heading("Hello,");
             ui.label("There should be a moveable object here soon.");
+
+            for object in &self.objects {
+                let rectangle = egui::Rect::from_min_size(object.position, egui::vec2(object.width, object.height));
+                ui.painter().rect_filled(rectangle, 0.0, egui::Color32::WHITE);
+            }
         });
     }
 }
