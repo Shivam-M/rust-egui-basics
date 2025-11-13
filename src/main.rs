@@ -48,6 +48,11 @@ impl CollisionApp {
 
         Self { controlled_object_index: 0, objects }
     }
+
+    fn draw_object(&self, ui: &mut egui::Ui, object: &Object) {
+        let rectangle = egui::Rect::from_min_size(object.position, egui::vec2(object.width, object.height));
+        ui.painter().rect_filled(rectangle, 0.0, egui::Color32::WHITE);
+    }
 }
 
 impl eframe::App for CollisionApp {
@@ -57,8 +62,7 @@ impl eframe::App for CollisionApp {
             ui.label("There should be a moveable object here soon.");
 
             for object in &self.objects {
-                let rectangle = egui::Rect::from_min_size(object.position, egui::vec2(object.width, object.height));
-                ui.painter().rect_filled(rectangle, 0.0, egui::Color32::WHITE);
+                self.draw_object(ui, object);
             }
         });
     }
