@@ -24,11 +24,12 @@ struct Object {
     height: f32,
     position: egui::Pos2,
     velocity: egui::Vec2,
+    colour: egui::Color32,
 }
 
 impl Object {
-    fn new(width: f32, height: f32, position: egui::Pos2, velocity: egui::Vec2) -> Self {
-        Self { width, height, position, velocity }
+    fn new(width: f32, height: f32, position: egui::Pos2, velocity: egui::Vec2, colour: egui::Color32) -> Self {
+        Self { width, height, position, velocity, colour }
     }
 
     fn update(&mut self) {
@@ -49,6 +50,7 @@ impl CollisionApp {
             50.0,
             egui::Pos2::new(WINDOW_WIDTH / 2.0, WINDOW_HEIGHT / 2.0),
             egui::Vec2::new(0.0, 1.0),
+            egui::Color32::LIGHT_RED,
         );
 
         let objects = vec![controlled_object];
@@ -63,7 +65,7 @@ impl CollisionApp {
         };
 
         let rectangle = egui::Rect::from_min_size(position, egui::vec2(object.width, object.height));
-        ui.painter().rect_filled(rectangle, 0.0, egui::Color32::WHITE);
+        ui.painter().rect_filled(rectangle, 0.0, object.colour);
     }
 }
 
