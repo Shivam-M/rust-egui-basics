@@ -3,7 +3,7 @@ use std::time::{Duration, Instant};
 
 static WINDOW_WIDTH: f32 = 1280.0;
 static WINDOW_HEIGHT: f32 = 720.0;
-static UPDATE_RATE: Duration = Duration::from_millis(1000 / 60);
+static UPDATE_RATE: Duration = Duration::from_millis(1000 / 120);
 
 fn main() -> eframe::Result<()> {
     let options = eframe::NativeOptions {
@@ -49,7 +49,7 @@ impl CollisionApp {
             50.0,
             50.0,
             egui::Pos2::new(WINDOW_WIDTH / 2.0, WINDOW_HEIGHT / 2.0),
-            egui::Vec2::new(0.0, 1.0),
+            egui::Vec2::new(0.0, 0.0),
             egui::Color32::LIGHT_RED,
         );
 
@@ -67,6 +67,32 @@ impl CollisionApp {
         let rectangle = egui::Rect::from_min_size(position, egui::vec2(object.width, object.height));
         ui.painter().rect_filled(rectangle, 0.0, object.colour);
     }
+
+    fn handle_input(&mut self, ctx: &egui::Context) {
+        let controlled_object = &mut self.objects[self.controlled_object_index];
+        let speed = 5.0;
+
+        // maybe refactor to check which key was last pressed on each axis use that instead of stopping movement when both are pressed
+        ctx.input(|input| {
+            let left = input.key_down(egui::Key::ArrowLeft);
+            let right = input.key_down(egui::Key::ArrowRight);
+
+            controlled_object.velocity.x = match (left, right) {
+                (true, false) => -speed,
+                (false, true) => speed,
+                _ => 0.0,
+            };
+
+            let up = input.key_down(egui::Key::ArrowUp);
+            let down = input.key_down(egui::Key::ArrowDown);
+
+            controlled_object.velocity.y = match (up, down) {
+                (true, false) => -speed,
+                (false, true) => speed,
+                _ => 0.0,
+            };
+        });
+    }
 }
 
 impl eframe::App for CollisionApp {
@@ -77,9 +103,12 @@ impl eframe::App for CollisionApp {
 
             let current_time = Instant::now();
             if current_time - self.last_update_time >= UPDATE_RATE {
+                self.handle_input(ctx);
+
                 for object in &mut self.objects {
                     object.update();
                 }
+
                 self.last_update_time = current_time;
             }
 
