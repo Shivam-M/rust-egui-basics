@@ -99,7 +99,10 @@ impl eframe::App for CollisionApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.heading("Hello,");
-            ui.label("There should be a moveable object here soon.");
+            ui.label("There is a moveable object here (use the arrow keys to move it around)");
+
+            let controlled_object_position = self.objects[self.controlled_object_index].position;
+            ui.label(format!("Object position: ({:.2}, {:.2})", controlled_object_position.x, controlled_object_position.y));
 
             let current_time = Instant::now();
             if current_time - self.last_update_time >= UPDATE_RATE {
