@@ -82,6 +82,12 @@ impl CollisionApp {
         Self { controlled_object_index: 0, objects: objects, last_update_time: Instant::now() }
     }
 
+    fn do_objects_overlap(object_1: &Object, object_2: &Object) -> bool {
+        let rect_1 = egui::Rect::from_center_size(object_1.position, egui::vec2(object_1.width, object_1.height));
+        let rect_2 = egui::Rect::from_center_size(object_2.position, egui::vec2(object_2.width, object_2.height));
+        rect_1.intersects(rect_2)
+    }
+
     fn draw_object(&self, ui: &mut egui::Ui, object: &Object, centred: bool) {
         let position = match centred {
             true => egui::pos2(object.position.x - object.width / 2.0, object.position.y - object.height / 2.0),
