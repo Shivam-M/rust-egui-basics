@@ -53,7 +53,31 @@ impl CollisionApp {
             egui::Color32::LIGHT_RED,
         );
 
-        let objects = vec![controlled_object];
+        let mut objects = vec![controlled_object];
+
+        objects.push(Object::new(
+            200.0,
+            100.0,
+            egui::Pos2::new(300.0, 300.0),
+            egui::Vec2::new(0.0, 0.0),
+            egui::Color32::LIGHT_BLUE,
+        ));
+
+        objects.push(Object::new(
+            50.0,
+            300.0,
+            egui::Pos2::new(1000.0, 200.0),
+            egui::Vec2::new(0.0, 0.0),
+            egui::Color32::LIGHT_GREEN,
+        ));
+
+        objects.push(Object::new(
+            350.0,
+            250.0,
+            egui::Pos2::new(200.0, 550.0),
+            egui::Vec2::new(2.5, 0.0),
+            egui::Color32::LIGHT_YELLOW,
+        ));
 
         Self { controlled_object_index: 0, objects: objects, last_update_time: Instant::now() }
     }
