@@ -35,6 +35,12 @@ impl Object {
     fn update(&mut self) {
         self.position += self.velocity;
     }
+
+    fn overlaps_with(self, other: &Object) -> bool {
+        let rect_1 = egui::Rect::from_center_size(self.position, egui::vec2(self.width, self.height));
+        let rect_2 = egui::Rect::from_center_size(other.position, egui::vec2(other.width, other.height));
+        return rect_1.intersects(rect_2)
+    }
 }
 
 struct CollisionApp {
@@ -80,12 +86,6 @@ impl CollisionApp {
         ));
 
         Self { controlled_object_index: 0, objects: objects, last_update_time: Instant::now() }
-    }
-
-    fn do_objects_overlap(object_1: &Object, object_2: &Object) -> bool {
-        let rect_1 = egui::Rect::from_center_size(object_1.position, egui::vec2(object_1.width, object_1.height));
-        let rect_2 = egui::Rect::from_center_size(object_2.position, egui::vec2(object_2.width, object_2.height));
-        rect_1.intersects(rect_2)
     }
 
     fn draw_object(&self, ui: &mut egui::Ui, object: &Object, centred: bool) {
