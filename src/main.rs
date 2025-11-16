@@ -55,7 +55,7 @@ impl CollisionApp {
             50.0,
             50.0,
             egui::Pos2::new(WINDOW_WIDTH / 2.0, WINDOW_HEIGHT / 2.0),
-            egui::Vec2::new(0.0, 0.0),
+            egui::Vec2::ZERO,
             egui::Color32::LIGHT_RED,
         );
 
@@ -65,7 +65,7 @@ impl CollisionApp {
             200.0,
             100.0,
             egui::Pos2::new(300.0, 300.0),
-            egui::Vec2::new(0.0, 0.0),
+            egui::Vec2::ZERO,
             egui::Color32::LIGHT_BLUE,
         ));
 
@@ -73,7 +73,7 @@ impl CollisionApp {
             50.0,
             300.0,
             egui::Pos2::new(1000.0, 200.0),
-            egui::Vec2::new(0.0, 0.0),
+            egui::Vec2::ZERO,
             egui::Color32::LIGHT_GREEN,
         ));
 
@@ -115,7 +115,7 @@ impl CollisionApp {
         if collided {
             let controlled_object = &mut self.objects[self.controlled_object_index];
             controlled_object.position -= controlled_object.velocity;
-            controlled_object.velocity = egui::Vec2::new(0.0, 0.0);
+            controlled_object.velocity = egui::Vec2::ZERO;
         }
     }
 
