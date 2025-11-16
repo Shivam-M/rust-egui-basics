@@ -36,7 +36,7 @@ impl Object {
         self.position += self.velocity;
     }
 
-    fn overlaps_with(self, other: &Object) -> bool {
+    fn overlaps_with(&self, other: &Object) -> bool {
         let rect_1 = egui::Rect::from_center_size(self.position, egui::vec2(self.width, self.height));
         let rect_2 = egui::Rect::from_center_size(other.position, egui::vec2(other.width, other.height));
         return rect_1.intersects(rect_2)
@@ -98,6 +98,27 @@ impl CollisionApp {
         ui.painter().rect_filled(rectangle, 0.0, object.colour);
     }
 
+    // only resolves collisions for the controlled object
+    fn resolve_collisions(&mut self) {
+        let mut collided = false;
+        
+        for (index, object) in self.objects.iter().enumerate() {
+            if index == self.controlled_object_index {
+                continue;
+            }
+
+            if self.objects[self.controlled_object_index].overlaps_with(object) {
+                collided = true;
+            }
+        }
+
+        if collided {
+            let controlled_object = &mut self.objects[self.controlled_object_index];
+            controlled_object.position -= controlled_object.velocity;
+            controlled_object.velocity = egui::Vec2::new(0.0, 0.0);
+        }
+    }
+
     fn handle_input(&mut self, ctx: &egui::Context) {
         let controlled_object = &mut self.objects[self.controlled_object_index];
         let speed = 5.0;
@@ -141,6 +162,8 @@ impl eframe::App for CollisionApp {
                 for object in &mut self.objects {
                     object.update();
                 }
+
+                self.resolve_collisions();
 
                 self.last_update_time = current_time;
             }
