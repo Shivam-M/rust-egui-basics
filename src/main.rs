@@ -100,22 +100,28 @@ impl CollisionApp {
 
     // only resolves collisions for the controlled object
     fn resolve_collisions(&mut self) {
-        let mut collided = false;
-        
+        let mut collided_object_velocity = None;
+
         for (index, object) in self.objects.iter().enumerate() {
             if index == self.controlled_object_index {
                 continue;
             }
 
             if self.objects[self.controlled_object_index].overlaps_with(object) {
-                collided = true;
+                collided_object_velocity = Some(object.velocity);
+                break;
             }
         }
 
-        if collided {
+        // could add per axis collision resolution here
+        if collided_object_velocity.is_some() {
             let controlled_object = &mut self.objects[self.controlled_object_index];
             controlled_object.position -= controlled_object.velocity;
-            controlled_object.velocity = egui::Vec2::ZERO;
+            if collided_object_velocity.unwrap() != egui::Vec2::ZERO {
+                controlled_object.position += collided_object_velocity.unwrap();
+            } else {
+                controlled_object.velocity = egui::Vec2::ZERO;
+            }
         }
     }
 
